@@ -22,7 +22,13 @@ The process can be visualized like this:
 
 ## Quick Sort
 
-This is one of the simplest sorting algorithms. It can be implemented in just a few lines.
+This is a more complex algorithm, but it runs faster. It works by recursively _pivoting_ the data:
+1. Define a start/end range (grey) 
+2. Pick an pivot value within the range (orange)
+3. Move everything smaller than the pivot left of the pivot (red is active swap)
+4. Move everything greater to the right.
+5. The left recursive problem is the values smaller than the pivot
+6. The right recursive problem is the values greater than the pivot
 
 ```python
 def quicksort_inplace(arr, low, high):

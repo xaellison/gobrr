@@ -38,6 +38,7 @@ def quicksort_inplace(arr, low, high):
         quicksort_inplace(arr, pivot_index + 1, high)
 
 def partition(arr, low, high):
+
     pivot = arr[high]  # Choose the last element as the pivot
     i = low - 1        # Pointer for the smaller element
 
@@ -47,19 +48,21 @@ def partition(arr, low, high):
             # Swap elements to place smaller elements on the left
             if i != j:
                 arr[i], arr[j] = arr[j], arr[i]    
-                trace['states'].append(serialize_state(arr, lambda id: ('red' if id in (i, j) else 'white')))
+                trace['states'].append(serialize_state(arr, lambda id: 'orange' if arr[id] == pivot else (('red' if id in (i, j) else ( 'grey' if low <= id <= high else 'white')))))
         
 
     # Swap the pivot element to its correct position
     if i+1 != high:
         arr[i + 1], arr[high] = arr[high], arr[i + 1]
-        trace['states'].append(serialize_state(arr, lambda id: ('red' if id in (i + 1, high) else 'white')))
+        trace['states'].append(serialize_state(arr, lambda id: 'orange' if arr[id] == pivot else ('red' if id in (i+1, high) else ( 'grey' if low <= id <= high else 'white'))))
     return i + 1
 
 quicksort_inplace(values, 0, len(values) - 1)
 
 
 assert sorted(values) == values
+
+trace['states'] = trace['states'] + [trace['states'][-1]] * 3
 
 with open("gobrr/public/quick_sort.json", "w") as f:
     json.dump(trace, f)

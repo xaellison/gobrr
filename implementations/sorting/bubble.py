@@ -28,16 +28,14 @@ def serialize_state(values, color_func):
     return rects
         
 
-total_steps = 0
 for i in range(0, N):
     for j in range(i + 1, N):
         if values[i] > values[j]:
             values[i], values[j] = values[j], values[i]
 
         trace['states'].append(serialize_state(values, lambda id: 'red' if id in (i, j) else 'white'))
-        total_steps += 1
 
-trace["total_steps"] = total_steps
+trace['states'] = trace['states'] + [trace['states'][-1]] * 3
 
 with open("gobrr/public/bubble_sort.json", "w") as f:
     json.dump(trace, f)
