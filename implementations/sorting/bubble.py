@@ -1,10 +1,12 @@
 import json
-values = [4, 1, 2, 6, 5, 3]
+import random
+values = [i for i in range(0, 20)]
+random.shuffle(values)
 N = len(values)
 
 trace = {"states": []}
 
-def serialize_state(values):
+def serialize_state(values, color_func):
     xy_padding = 0.1
     bar_width = (1 - xy_padding * 2) / (N + (N - 1)) # divide the padded space by the number of bars and equal sized space between bars
     max_value = max(values)
@@ -18,7 +20,8 @@ def serialize_state(values):
                 "x": xy_padding + 2 * i * bar_width,
                 "y": 0.5 + (values[i] / max_value) * (1 - xy_padding) / 2,
                 "width": bar_width,
-                "height": -(values[i] / max_value) * (1 - xy_padding)
+                "height": -(values[i] / max_value) * (1 - xy_padding),
+                "color": color_func(i)
             }
         }
         rects[values[i]] = rect
@@ -31,7 +34,7 @@ for i in range(0, N):
         if values[i] > values[j]:
             values[i], values[j] = values[j], values[i]
 
-        trace['states'].append(serialize_state(values))
+        trace['states'].append(serialize_state(values, lambda id: 'red' if id in (i, j) else 'white'))
         total_steps += 1
 
 trace["total_steps"] = total_steps
