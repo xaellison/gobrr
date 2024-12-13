@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from "react";
 
-const MyAnimation = () => {
+const MyAnimation = ({path}) => {
   const canvasRef = useRef(null);
 
   const [states, setData] = useState([]);
@@ -10,9 +10,9 @@ const MyAnimation = () => {
     // Fetch the JSON file in the client-side
     const fetchRectangles = async () => {
       try {
-        const response = await fetch("/bubble_sort.json");
+        const response = await fetch(path);
         if (!response.ok) {
-          throw new Error("Failed to fetch bubble_sort.json");
+          throw new Error("Failed to fetch path");
         }
         const data = await response.json();
         setData(data['states']);

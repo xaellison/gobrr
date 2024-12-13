@@ -17,4 +17,44 @@ def bubble_sort(values):
 
 
 The process can be visualized like this:
-<MyAnimation />
+<MyAnimation path="/bubble_sort.json" />
+
+
+## Quick Sort
+
+This is one of the simplest sorting algorithms. It can be implemented in just a few lines.
+
+```python
+def quicksort_inplace(arr, low, high):
+    if low < high:
+        # Partition the array and get the pivot index
+        pivot_index = partition(arr, low, high)
+        # Recursively sort elements before and after the pivot
+        quicksort_inplace(arr, low, pivot_index - 1)
+        quicksort_inplace(arr, pivot_index + 1, high)
+
+def partition(arr, low, high):
+    pivot = arr[high]  # Choose the last element as the pivot
+    i = low - 1        # Pointer for the smaller element
+
+    for j in range(low, high):
+        if arr[j] <= pivot:
+            i += 1
+            # Swap elements to place smaller elements on the left
+            if i != j:
+                arr[i], arr[j] = arr[j], arr[i]    
+
+    # Swap the pivot element to its correct position
+    if i+1 != high:
+        arr[i + 1], arr[high] = arr[high], arr[i + 1]
+    
+    return i + 1
+
+quicksort_inplace(values, 0, len(values) - 1)
+
+```
+
+
+The process can be visualized like this:
+<MyAnimation path="/quick_sort.json" />
+
