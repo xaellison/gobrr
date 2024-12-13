@@ -33,7 +33,7 @@ const MyAnimation = () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
 
-    const drawRectangles = () => {
+    const drawRectangles = (t) => {
       ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
 
       rectangles.forEach((state) => {
@@ -41,7 +41,7 @@ const MyAnimation = () => {
           const { x, y, width, height } = rect.args;
           ctx.beginPath();
           ctx.rect(
-            x * canvas.width,
+            x * canvas.width + Math.sin(t / 1000) * 200,
             y * canvas.height, // Adjust y for canvas origin
             width * canvas.width,
             height * canvas.height
@@ -50,9 +50,10 @@ const MyAnimation = () => {
           ctx.fill();
         });
       });
+      requestAnimationFrame(drawRectangles);
     };
 
-    drawRectangles();
+    requestAnimationFrame(drawRectangles);
   }, [rectangles]);
 
   return <canvas ref={canvasRef} style={{ width: "100%", height: "100%" }} />;
