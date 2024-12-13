@@ -1,6 +1,6 @@
 import json
 import random
-values = [i for i in range(0, 20)]
+values = [i for i in range(1, 11)]
 random.shuffle(values)
 N = len(values)
 
