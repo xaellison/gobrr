@@ -5,7 +5,7 @@ import React, { useEffect, useRef, useState } from "react";
 const MyAnimation = () => {
   const canvasRef = useRef(null);
 
-  const [rectangles, setRectangles] = useState([]);
+  const [states, setData] = useState([]);
 
   useEffect(() => {
     console.log("!")
@@ -17,7 +17,8 @@ const MyAnimation = () => {
           throw new Error("Failed to fetch rectangles.json");
         }
         const data = await response.json();
-        setRectangles(data);
+        setData(data);
+      
       } catch (error) {
         console.error("Error loading rectangles.json:", error);
       }
@@ -34,10 +35,14 @@ const MyAnimation = () => {
     canvas.height = window.innerHeight;
 
     const drawRectangles = (t) => {
-      ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
-
-      rectangles.forEach((state) => {
-        Object.values(state).forEach((rect) => {
+      if (states !== undefined && states.length > 0) { // prevents calls where state is null. not sure why
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+          
+       let rectangles = states[0]
+       console.log(Object.keys(rectangles))
+        for (const key of Object.keys(rectangles)) {
+          console.log(key)
+          const rect = rectangles[key]
           const { x, y, width, height } = rect.args;
           ctx.beginPath();
           ctx.rect(
@@ -48,13 +53,13 @@ const MyAnimation = () => {
           );
           ctx.fillStyle = "green";
           ctx.fill();
-        });
-      });
-      requestAnimationFrame(drawRectangles);
+        }
+        requestAnimationFrame(drawRectangles); // fails without this
+      }
     };
 
-    requestAnimationFrame(drawRectangles);
-  }, [rectangles]);
+    requestAnimationFrame(drawRectangles);// fails without this
+  }, [states]); // required to actually draw once states is async'ly set
 
   return <canvas ref={canvasRef} style={{ width: "100%", height: "100%" }} />;
 };
