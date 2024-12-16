@@ -1,5 +1,6 @@
 import json
 import random
+random.seed(4)
 values = [i for i in range(1, 31)]
 random.shuffle(values)
 N = len(values)
@@ -29,39 +30,55 @@ def serialize_state(values, color_func):
 
 
 
+###
 def quicksort_inplace(arr, low, high):
     if low < high:
         # Partition the array and get the pivot index
-        pivot_index = partition(arr, low, high)
+        pivot_index = hoare_partition(arr, low, high)
         # Recursively sort elements before and after the pivot
-        quicksort_inplace(arr, low, pivot_index - 1)
+        quicksort_inplace(arr, low, pivot_index)
         quicksort_inplace(arr, pivot_index + 1, high)
 
-def partition(arr, low, high):
+def hoare_partition(arr, low, high):
+    mid = (low + high) // 2
+    pivot = arr[mid]  # Choose the middlde element as the pivot, good choice for rand, sorted, reverse sorted
+    i = low - 1
+    j = high + 1
 
-    pivot = arr[high]  # Choose the last element as the pivot
-    i = low - 1        # Pointer for the smaller element
-
-    for j in range(low, high):
-        if arr[j] <= pivot:
+    while True:
+        # Move `i` to the right until an element greater than or equal to the pivot is found
+            
+        i += 1
+        while arr[i] < pivot:
             i += 1
-            # Swap elements to place smaller elements on the left
-            if i != j:
-                arr[i], arr[j] = arr[j], arr[i]    
-                trace['states'].append(serialize_state(arr, lambda id: 'orange' if arr[id] == pivot else (('red' if id in (i, j) else ( 'grey' if low <= id <= high else 'white')))))
-        
+            trace['states'].append(serialize_state(arr, lambda id: 'orange' if arr[id] == pivot else ('red' if id in (i, j) else ( 'grey' if low <= id <= high else 'white'))))
+            
 
-    # Swap the pivot element to its correct position
-    if i+1 != high:
-        arr[i + 1], arr[high] = arr[high], arr[i + 1]
-        trace['states'].append(serialize_state(arr, lambda id: 'orange' if arr[id] == pivot else ('red' if id in (i+1, high) else ( 'grey' if low <= id <= high else 'white'))))
-    return i + 1
+        # Move `j` to the left until an element less than or equal to the pivot is found
+        j -= 1
+        while arr[j] > pivot:
+            j -= 1
+            trace['states'].append(serialize_state(arr, lambda id: 'orange' if arr[id] == pivot else ('red' if id in (i, j) else ( 'grey' if low <= id <= high else 'white'))))
+            
+
+        # If pointers have crossed, return the partition index
+        if i >= j:
+            return j
+
+        # Swap the elements at `i` and `j`
+        arr[i], arr[j] = arr[j], arr[i]
+        trace['states'].append(serialize_state(arr, lambda id: 'orange' if arr[id] == pivot else ('red' if id in (i, j) else ( 'grey' if low <= id <= high else 'white'))))
+
+###
 
 quicksort_inplace(values, 0, len(values) - 1)
 
 
-assert sorted(values) == values
 
+
+
+assert sorted(values) == values
+print(len(trace['states']))
 trace['states'] = trace['states'] + [trace['states'][-1]] * 3
 
 with open("gobrr/public/quick_sort.json", "w") as f:
